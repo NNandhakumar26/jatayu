@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1049239069505",
+    "project_id": "jatayu-b51a1",
+    "storage_bucket": "jatayu-b51a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049239069505:android:5c2985821cc1edd116f7c0",
+        "android_client_info": {
+          "package_name": "com.example.jatayu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049239069505-4khe402ul6eaddi3skv1t210kdribfm3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jatayu",
+            "certificate_hash": "bdb85148613bd9ca72a2d2cab91926b89b550e6d"
+          }
+        },
+        {
+          "client_id": "1049239069505-k7b75mu4ph3s37k0t5o854gfol9f054c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAztTivOiFw-lZYTa4qXzM_hP5cH3LEroM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049239069505-k7b75mu4ph3s37k0t5o854gfol9f054c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
