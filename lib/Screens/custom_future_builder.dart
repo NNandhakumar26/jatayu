@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:async/async.dart';
+import 'package:jatayu/Widgets/loading_dialog.dart';
+
+import '../Theme.dart';
 
 class CustomFutureBuilder<T> extends StatefulWidget {
   final Widget Function(T) onSuccessWidget;
@@ -36,16 +39,8 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
         AsyncSnapshot<T> snapshot,
       ) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Row(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(
-                  width: 8,
-                ),
-                Text('Loading'),
-              ],
-            ),
+          return CustomLoadingDialog(
+            title: 'Loading',
           );
         } else if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {

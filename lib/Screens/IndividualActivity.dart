@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jatayu/Model/Activity.dart';
+import 'package:jatayu/modals/Activity.dart';
 import 'package:jatayu/Theme.dart';
 
 class IndividualActivity extends StatelessWidget {

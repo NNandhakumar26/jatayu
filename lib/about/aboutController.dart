@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:jatayu/Model/User.dart';
+import 'package:jatayu/modals/User.dart';
 
 class AboutController extends GetxController {
   final imageUrl = null;

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jatayu/database/local_database.dart';
 import 'package:jatayu/Theme.dart';
 import 'package:jatayu/splashScreen.dart';
 
@@ -24,9 +25,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
+  await LocalData.openMainBox();
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
+      statusBarColor: Colors.white,
       statusBarBrightness: Brightness.light,
     ),
   );
@@ -172,18 +175,11 @@ class _MyAppState extends State<MyApp> {
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    final IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings(
-            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    final MacOSInitializationSettings initializationSettingsMacOS =
-        MacOSInitializationSettings();
+
     final InitializationSettings initializationSettings =
         InitializationSettings(
-            android: initializationSettingsAndroid,
-            iOS: initializationSettingsIOS,
-            macOS: initializationSettingsMacOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+      android: initializationSettingsAndroid,
+    );
 
     RemoteMessage? _ = await FirebaseMessaging.instance.getInitialMessage();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

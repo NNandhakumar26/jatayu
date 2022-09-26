@@ -1,32 +1,33 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:jatayu/Model/project.dart';
-import 'package:jatayu/Network/data_fetching.dart';
-import 'package:jatayu/Screens/custom_future_builder.dart';
 import 'package:jatayu/Screens/mainpage.dart';
-import 'package:jatayu/Widgets/bouncingButton.dart';
+import 'package:jatayu/about/myposts_page.dart';
+import 'package:jatayu/modals/project.dart';
+import 'package:jatayu/database/network_database.dart';
+import 'package:jatayu/Screens/custom_future_builder.dart';
 import 'package:lottie/lottie.dart';
-
 import '../Theme.dart';
-import 'ProfilePage.dart';
+import 'profile_page.dart';
 
-class AboutPage extends GetView {
+class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 8,
-          leadingWidth: 0,
-          shadowColor: Style.nearlyDarkBlue.withOpacity(0.16),
-          title: CompanyAppbarRow(),
-        ),
-        preferredSize: Size(
-          double.infinity,
-          MediaQuery.of(context).size.height / 14,
-        ),
-      ),
+      // appBar: PreferredSize(
+      //   child: AppBar(
+      //     backgroundColor: Colors.white,
+      //     elevation: 8,
+      //     leadingWidth: 0,
+      //     shadowColor: Style.nearlyDarkBlue.withOpacity(0.16),
+      //     title: CompanyAppbar(),
+      //   ),
+      //   preferredSize: Size(
+      //     double.infinity,
+      //     MediaQuery.of(context).size.height / 14,
+      //   ),
+      // ), g and h are the ghghghghghgh ggg hhh g and h g, h
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -34,81 +35,93 @@ class AboutPage extends GetView {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ProfilePageWidget(title: 'You Are', widgets: [
-                  ListTile(
-                    onTap: () {
-                      Get.to(ProfilePage());
-                    },
-                    contentPadding: EdgeInsets.all(10),
-                    dense: true,
-                    title: Container(
-                      padding: EdgeInsets.symmetric(vertical: 4),
-                      child: Text(
-                        'Nandha Kumar',
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: Style.headline.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.8,
-                          color: Style.darkerText,
+                ProfilePageWidget(
+                  title: 'You Are',
+                  widgets: [
+                    ListTile(
+                      onTap: () => Style.navigateBack(context, ProfilePage()),
+                      contentPadding: EdgeInsets.all(10),
+                      dense: true,
+                      title: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          FirebaseAuth.instance.currentUser?.displayName ??
+                              'Profile Page',
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          style: Style.headline.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.8,
+                            color: Style.darkerText,
+                          ),
                         ),
                       ),
-                    ),
-                    leading: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage('assets/images/jatayu.png'),
-                      foregroundImage: AssetImage('assets/images/human.jpg'),
-                      // child: (controller.imageUrl.value == null)
-                      //     ? Container(
-                      //         color: Styling.primary,
-                      //       )
-                      //     : Container(
-                      //         height: 150.h,
-                      //         width: 150.w,
-                      //         decoration: new BoxDecoration(
-                      //           shape: BoxShape.circle,
-                      //           image: new DecorationImage(
-                      //             fit: BoxFit.cover,
-                      //             image: NetworkImage(
-                      //                 controller.imageUrl.value.toString()),
-                      //           ),
-                      //         ),
-                      //       ),
-                    ),
-                    // trailing: SizedBox(
-                    //   width: Get.width / 8,
-                    //   child: Icon(
-                    //     Icons.edit_outlined,
-                    //     color: Style.nearlyDarkBlue,
-                    //     size: 20,
-                    //   ),
-                    // ),
-                    subtitle: Text(
-                      '9585447986',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.4,
-                        color: Style.lightText,
-                        // color: lightTextColor,
+                      leading: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        backgroundImage: AssetImage('assets/images/jatayu.png'),
+                        foregroundImage: CachedNetworkImageProvider(
+                            FirebaseAuth.instance.currentUser!.photoURL ?? ''),
+                        // child: (controller.imageUrl.value == null)
+                        //     ? Container(
+                        //         color: Styling.primary,
+                        //       )
+                        //     : Container(
+                        //         height: 150.h,
+                        //         width: 150.w,
+                        //         decoration: new BoxDecoration(
+                        //           shape: BoxShape.circle,
+                        //           image: new DecorationImage(
+                        //             fit: BoxFit.cover,
+                        //             image: NetworkImage(
+                        //                 controller.imageUrl.value.toString()),
+                        //           ),
+                        //         ),
+                        //       ),
+                      ),
+                      // trailing: SizedBox(
+                      //   width: Get.width / 8,
+                      //   child: Icon(
+                      //     Icons.edit_outlined,
+                      //     color: Style.nearlyDarkBlue,
+                      //     size: 20,
+                      //   ),
+                      // ),
+                      subtitle: Text(
+                        'Click here to update your profile',
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                              color: Colors.black45,
+                              fontSize: 12,
+                            ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        buildButton(context, '4.8', 'Ranking'),
-                        buildDivider(),
-                        buildButton(context, '35', 'Following'),
-                        buildDivider(),
-                        buildButton(context, '50', 'Followers'),
-                      ],
+                    // Padding(
+                    //   padding: EdgeInsets.all(8),
+                    //   child: ListTile(
+                    //     onTap: ,
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          buildButton(context, '4.8', 'Ranking'),
+                          buildDivider(),
+                          buildButton(context, '35', 'Following'),
+                          buildDivider(),
+                          buildButton(context, '50', 'Followers'),
+                        ],
+                      ),
                     ),
-                  ),
-                ]),
+                    CustomCard(
+                      title: 'My Posts',
+                      subtitle: 'Click here to View / Update posts',
+                      navigateTo: MyPostsPage(),
+                    ),
+                  ],
+                ),
                 ProfilePageWidget(title: 'Your Badge', widgets: [
                   Stack(
                     children: [
@@ -207,7 +220,7 @@ class AboutPage extends GetView {
                           )
                           .toList(),
                     ),
-                    futureFunction: Network.getAllOngoingProjects(),
+                    futureFunction: Network.readOngoingProjects(),
                   ),
                 ),
                 ProjectCard(

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jatayu/Network/data_fetching.dart';
+import 'package:jatayu/database/network_database.dart';
 import 'package:jatayu/Screens/custom_future_builder.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,7 +22,7 @@ class _MainPageContainerState extends State<MainPageContainer> {
   Future<List<Quotes>> close() async {
     return await _closeMemo.runOnce(
       () async {
-        return await Network.getAllQuotes();
+        return await Network.readQuotes();
       },
     );
   }
@@ -144,7 +144,7 @@ class _MainPageContainerState extends State<MainPageContainer> {
                     ),
                   ),
                 ),
-                futureFunction: Network.getAllQuotes(),
+                futureFunction: Network.readQuotes(),
               ),
               // FutureBuilder<List<Quotes>>(
               //   future: close(),

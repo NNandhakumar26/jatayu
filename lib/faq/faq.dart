@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:jatayu/FAQ_Section/full_list.dart';
-import 'package:jatayu/Model/Activity.dart';
-import 'package:jatayu/Network/data_fetching.dart';
+import 'package:jatayu/faq/full_list.dart';
+import 'package:jatayu/modals/Activity.dart';
+import 'package:jatayu/database/network_database.dart';
 import 'package:jatayu/Screens/custom_future_builder.dart';
-import 'package:jatayu/Screens/mainpage.dart';
+
 import 'package:jatayu/Theme.dart';
 import 'package:jatayu/Widgets/IndividualScreen.dart';
 import 'package:jatayu/Widgets/StackedImageContainer.dart';
 import 'package:jatayu/Widgets/titleView.dart';
 
-class FAQPage extends GetView {
+import '../Widgets/appbars.dart';
+
+class FAQPage extends StatelessWidget {
   final knowYourPlants = <Activity>[];
   final faq = <Activity>[];
   @override
@@ -22,7 +23,7 @@ class FAQPage extends GetView {
           elevation: 8,
           leadingWidth: 0,
           shadowColor: Style.nearlyDarkBlue.withOpacity(0.16),
-          title: CompanyAppbarRow(),
+          title: CompanyAppbar(),
         ),
         preferredSize: Size(
           double.infinity,
@@ -38,7 +39,7 @@ class FAQPage extends GetView {
         backgroundColor: Style.nearlyDarkBlue.withOpacity(0.87),
       ),
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: SingleChildScrollView(
@@ -46,7 +47,7 @@ class FAQPage extends GetView {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: Get.height / 1.87,
+                  height: MediaQuery.of(context).size.height / 1.87,
                   child: Column(
                     children: [
                       Expanded(
@@ -56,7 +57,8 @@ class FAQPage extends GetView {
                             title: 'Know Your Plants',
                             subtitle: 'More',
                             onPressed: () {
-                              Get.to(
+                              Style.navigateBack(
+                                context,
                                 FullListPage(
                                   activityList: knowYourPlants,
                                   isFAQPage: false,
@@ -81,7 +83,7 @@ class FAQPage extends GetView {
                               ),
                             );
                           },
-                          futureFunction: Network.getAllActivities(
+                          futureFunction: Network.readActivities(
                             GetPost.knowYourPlants,
                           ),
                         ),
@@ -93,7 +95,8 @@ class FAQPage extends GetView {
                   title: 'Frequently Asked Questions',
                   subtitle: 'More',
                   onPressed: () {
-                    Get.to(
+                    Style.navigateBack(
+                      context,
                       FullListPage(
                         activityList: faq,
                         isFAQPage: true,
@@ -109,7 +112,8 @@ class FAQPage extends GetView {
                           .map(
                             (index) => InkWell(
                               onTap: () {
-                                Get.to(IndividualPage(value[index]));
+                                Style.navigateBack(
+                                    context, IndividualPage(value[index]));
                               },
                               child: FAQContainer(
                                 title: value[index].title ?? 'No Title',
@@ -121,7 +125,7 @@ class FAQPage extends GetView {
                           .toList(),
                     );
                   },
-                  futureFunction: Network.getAllActivities(
+                  futureFunction: Network.readActivities(
                     GetPost.faq,
                   ),
                 ),
@@ -155,7 +159,7 @@ class FAQContainer extends StatelessWidget {
       ),
       padding: EdgeInsets.all(20),
       height: 180,
-      width: Get.width,
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Color.fromARGB(255, 249, 249, 253),
         borderRadius: BorderRadius.only(
@@ -174,8 +178,8 @@ class FAQContainer extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: Get.height / 11,
-            width: Get.width,
+            height: MediaQuery.of(context).size.height / 11,
+            width: MediaQuery.of(context).size.width,
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: Text(

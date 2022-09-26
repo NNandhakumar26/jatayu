@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:get/get.dart';
-import 'package:jatayu/Model/Activity.dart';
+import 'package:jatayu/modals/Activity.dart';
 import 'package:jatayu/Widgets/IndividualScreen.dart';
 import '../Theme.dart';
 
@@ -16,9 +16,15 @@ class StackedImageContainer extends StatelessWidget {
   });
 
   _onPressed(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 248), () {
-      Get.to(IndividualPage(activity));
-    });
+    Future.delayed(
+      Duration(milliseconds: 248),
+      () {
+        Style.navigateBack(
+          context,
+          IndividualPage(activity),
+        );
+      },
+    );
   }
 
   @override
@@ -76,16 +82,19 @@ class CustomListTile extends StatelessWidget {
     required this.title,
     this.leading,
     required this.subtitle,
+    this.onTap,
   }) : super(key: key);
 
   final String title;
   final String subtitle;
   final String? leading;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      minLeadingWidth: 16,
+      minLeadingWidth: 14,
+      onTap: () => (onTap != null) ? onTap!() : null,
       leading: (leading != null)
           ? Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -94,25 +103,21 @@ class CustomListTile extends StatelessWidget {
                 textAlign: TextAlign.right,
                 textHeightBehavior: TextHeightBehavior(),
                 style: Style.headline.copyWith(
-                  fontSize: 20,
-                  color: Style.nearlyDarkBlue.withOpacity(0.45),
+                  fontSize: 18,
+                  color: Colors.black38,
+                  // color: Style.nearlyDarkBlue.withOpacity(0.45),
                 ),
               ),
             )
           : null,
-      title: Text(
-        title,
-        textAlign: TextAlign.left,
-        softWrap: false,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontFamily: Style.fontName,
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-          color: Colors.black87,
-          // color: Style.nearlyDarkBlue,
-        ),
-      ),
+      title: Text(title,
+          textAlign: TextAlign.left,
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                color: Colors.black87,
+                fontWeight: FontWeight.w600,
+              )),
       isThreeLine: (leading != null) ? true : false,
       subtitle: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -121,11 +126,11 @@ class CustomListTile extends StatelessWidget {
           textAlign: TextAlign.left,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: Style.subtitle.copyWith(
-            fontSize: (leading != null) ? 14 : 12,
-            letterSpacing: -0.2,
-            color: Colors.black45,
-          ),
+          style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                fontSize: (leading != null) ? 14 : 12,
+                letterSpacing: -0.2,
+                color: Colors.black.withOpacity(0.60),
+              ),
         ),
       ),
       trailing: Icon(

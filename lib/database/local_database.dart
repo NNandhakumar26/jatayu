@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 enum LoggedInAs { Kids, Participant, Admin }
 
-class LocalDB {
+class LocalData {
   //TODO: USE GETTERS TO GET THE VALUES FROM THE Db
   static late Box mainBox;
 
@@ -26,8 +26,4 @@ class LocalDB {
       mainBox.put('userName', name);
   static Future<void> putUserID({required String userID}) =>
       mainBox.put('userID', userID);
-}
-
-class TEcmp {
-  var temp = LocalDB.phoneNumber;
 }

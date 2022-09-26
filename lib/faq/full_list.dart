@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jatayu/Model/Activity.dart';
-import 'package:jatayu/Screens/mainpage.dart';
+import 'package:jatayu/modals/Activity.dart';
 import 'package:jatayu/Theme.dart';
 import 'package:jatayu/Widgets/StackedImageContainer.dart';
+
+import '../Widgets/IndividualScreen.dart';
+import '../Widgets/appbars.dart';
 
 class FullListPage extends StatelessWidget {
   final List<Activity> activityList;
@@ -16,18 +18,12 @@ class FullListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 8,
-          leadingWidth: 0,
-          shadowColor: Style.nearlyDarkBlue.withOpacity(0.16),
-          title: CompanyAppbarRow(
-            title: isFAQPage ? 'FAQ' : 'Know Your Plants',
-          ),
+        child: DefaultAppbar(
+          title: (isFAQPage) ? 'FAQ' : 'Know Your Plants',
         ),
         preferredSize: Size(
           double.infinity,
-          MediaQuery.of(context).size.height / 14,
+          56,
         ),
       ),
       body: SafeArea(
@@ -43,6 +39,10 @@ class FullListPage extends StatelessWidget {
                 title: activityList[index].title ?? '',
                 subtitle: activityList[index].desc ?? '',
                 leading: (index + 1).toString(),
+                onTap: () => Style.navigateBack(
+                  context,
+                  IndividualPage(activityList[index]),
+                ),
               );
             },
           ),

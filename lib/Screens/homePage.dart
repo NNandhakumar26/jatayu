@@ -16,61 +16,11 @@ class HomePage extends StatelessWidget {
         return WillPopScope(
           onWillPop: () async {
             showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(
-                      'Confirm Exit',
-                      style: Style.title,
-                    ),
-                    content: Text(
-                      'Are you sure you want to exit?',
-                      style: Style.body1,
-                    ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: Get.height * 2 / 100,
-                            horizontal: Get.width * 4 / 100),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                'No',
-                                style: Style.subtitle,
-                              ),
-                            ),
-                            SizedBox(
-                              width: Get.width * 7 / 100,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (Platform.isAndroid) {
-                                  SystemNavigator.pop();
-                                } else if (Platform.isIOS) {
-                                  exit(0);
-                                }
-                              },
-                              child: Text(
-                                'Yes',
-                                style: Style.subtitle.copyWith(
-                                  color: Style.nearlyDarkBlue,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                ),
-                                // style: TextStyle(fontSize: size * 6 / 100),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                });
+              context: context,
+              builder: (context) {
+                return popupWidget(context);
+              },
+            );
             return true;
           },
           child: SafeArea(
@@ -99,12 +49,11 @@ class HomePage extends StatelessWidget {
                 },
                 heroTag: 'course',
                 child: Icon(
-                  Icons.class__rounded,
+                  Icons.class_rounded,
                   color: Colors.white,
                 ),
                 backgroundColor: Style.nearlyDarkBlue,
               ),
-            
               bottomNavigationBar: TitledBottomNavigationBar(
                 inactiveStripColor: Style.nearlyDarkBlue.withOpacity(0.16),
                 curve: Curves.bounceIn,
@@ -149,6 +98,60 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  AlertDialog popupWidget(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        'Confirm Exit',
+        style: Style.title,
+      ),
+      content: Text(
+        'Are you sure you want to exit?',
+        style: Style.body1,
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: Get.height * 2 / 100, horizontal: Get.width * 4 / 100),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'No',
+                  style: Style.subtitle,
+                ),
+              ),
+              SizedBox(
+                width: Get.width * 7 / 100,
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (Platform.isAndroid) {
+                    SystemNavigator.pop();
+                  } else if (Platform.isIOS) {
+                    exit(0);
+                  }
+                },
+                child: Text(
+                  'Yes',
+                  style: Style.subtitle.copyWith(
+                    color: Style.nearlyDarkBlue,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                  // style: TextStyle(fontSize: size * 6 / 100),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:jatayu/Hive/local_database.dart';
+import 'package:jatayu/database/local_database.dart';
 import 'package:jatayu/Registration/Registration_Controller.dart';
 import 'package:jatayu/Registration/mobile_verification.dart';
 import 'package:jatayu/Screens/homePage.dart';
 import 'package:jatayu/Theme.dart';
+import 'package:jatayu/registration_login/screens/login_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import 'Controllers/MainpageContoller.dart';
@@ -24,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    LocalDB.openMainBox();
+    LocalData.openMainBox();
 
     Future.delayed(
       Duration(seconds: 1),
@@ -37,24 +40,30 @@ class _SplashScreenState extends State<SplashScreen> {
       },
     );
 
-    Timer(Duration(milliseconds: 2800), () async {
-      await LocalDB.openMainBox().then(
-        (_) {
-          if (LocalDB.userID == null) {
-            Get.lazyPut<MainPageController>(
-              () => MainPageController(),
-            );
-            Get.offAll(HomePage());
-          } else {
-            Get.lazyPut(() => RegistrationController());
-            Get.off(MobilePage());
-          }
-        },
-      );
-    });
+//TODO: reduce the time in case the stream subscription consumes a lot of time.
+    Timer(
+      Duration(milliseconds: 2800),
+      () async {
+        // FirebaseAuth.instance.currentUser!.delete();
+        User? user = await FirebaseAuth.instance.authStateChanges().first;
+        if (user != null) {
+          Get.lazyPut<MainPageController>(
+            () => MainPageController(),
+          );
+          Style.navigate(context, HomePage());
+          // Get.offAll(HomePage());
+        } else {
+          Style.navigate(
+            context,
+            LoginPage(),
+          );
+        }
+      },
+    );
   }
 
   DateTime date = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Material(

@@ -1,5 +1,64 @@
 import 'package:flutter/material.dart';
 
+import 'Widgets/loading_dialog.dart';
+
+extension IntExtensions on int? {
+  /// Leaves given height of space
+  Widget get height => SizedBox(height: this?.toDouble());
+
+  /// Leaves given width of space
+  Widget get width => SizedBox(width: this?.toDouble());
+}
+
+extension StringExtensions on String? {
+  /// Leaves given height of space
+  Widget get plainText => Text(this ?? '');
+
+  Widget get centerText => Text(
+        this ?? '',
+        textAlign: TextAlign.center,
+      );
+
+  Widget get underlineText => Text(
+        this ?? '',
+        style: const TextStyle(
+          decoration: TextDecoration.underline,
+        ),
+      );
+
+  Widget get subTitle => Text(
+        this ?? '',
+        style: TextStyle(
+          color: Colors.grey.shade400,
+        ),
+      );
+
+  Widget get showLoading => Dialog(
+        elevation: 16,
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+            children: [
+              CircularProgressIndicator(
+                color: Colors.grey.shade300,
+              ),
+              16.width,
+              Expanded(
+                child: Text(
+                  this ?? '',
+                  textAlign: TextAlign.center,
+                  // style: Theme.of(context).textTheme.button!.copyWith(
+                  //       fontSize: 14,
+                  //       color: Colors.black87,
+                  //     ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+}
+
 class Style {
   Style._();
 
@@ -253,4 +312,85 @@ class Style {
     letterSpacing: 1.25,
     fontFamily: fontName,
   );
+  static Future<T?> navigate<T>(BuildContext context, Widget widget) {
+    return Navigator.pushAndRemoveUntil<T>(
+      context,
+      PageRouteBuilder<T>(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return widget;
+        },
+        transitionsBuilder:
+            (___, Animation<double> animation, ____, Widget child) {
+          return SlideTransition(
+            position: Tween(
+                    begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
+                .animate(animation),
+            child: child,
+          );
+        },
+      ),
+      (route) => false,
+    );
+  }
+
+  static Future<T?> navigateBack<T>(BuildContext context, Widget widget) {
+    return Navigator.push<T>(
+      context,
+      PageRouteBuilder<T>(
+        opaque: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return widget;
+        },
+        transitionsBuilder:
+            (___, Animation<double> animation, ____, Widget child) {
+          return SlideTransition(
+            position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+            child: child,
+          );
+          // return FadeTransition(
+          //   opacity: animation,
+          //   child: RotationTransition(
+          //     turns:
+          //         Tween<double>(begin: 0.5, end: 1.0)
+          //             .animate(animation),
+          //     child: child,
+          //   ),
+          // );
+        },
+      ),
+    );
+  }
+
+// TODO: merge this hide keyboard function with the loading dialog
+  static hideKeyboard(BuildContext context) =>
+      FocusScope.of(context).requestFocus(FocusNode());
+
+  static Future loadingDialog(BuildContext context,
+      {Widget? widget, String? title, bool barrierDismissible = true}) {
+    return showDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (context) => (widget != null)
+          ? widget
+          : CustomLoadingDialog(
+              title: title ?? '',
+            ),
+    );
+  }
+
+  static void showSnackBar(BuildContext context, String message,
+          {bool isError = false}) async =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: message.plainText,
+          action: SnackBarAction(
+            label: 'Done',
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        ),
+      );
 }

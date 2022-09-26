@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:jatayu/Screens/Activities.dart';
 import 'package:jatayu/Theme.dart';
 
-import '../Model/Activity.dart';
+import '../modals/Activity.dart';
 
 class IndividualPage extends StatelessWidget {
   final Activity activity;

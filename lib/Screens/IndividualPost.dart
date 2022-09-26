@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jatayu/Controllers/MainpageContoller.dart';
-import 'package:jatayu/Model/Post.dart';
+import 'package:jatayu/modals/Post.dart';
 import 'package:jatayu/Screens/post_container.dart';
-
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import '../Theme.dart';
 
 class IndividualPost extends GetView<MainPageController> {
@@ -59,7 +59,8 @@ class IndividualPost extends GetView<MainPageController> {
                       foregroundColor: Colors.transparent,
                       backgroundColor: Colors.transparent,
                       backgroundImage: CachedNetworkImageProvider(
-                          thisPost.userDetails!.imageUrl ?? ''),
+                        thisPost.userUrl ?? '',
+                      ),
                       maxRadius: 48,
                       minRadius: 40,
                     ),
@@ -67,15 +68,14 @@ class IndividualPost extends GetView<MainPageController> {
                   isThreeLine: true,
                   dense: false,
                   title: Text(
-                    thisPost.userDetails?.name ?? 'Priya Dharshini',
+                    thisPost.userNameWithClass ?? '',
                     style: Style.title.copyWith(
                       fontWeight: FontWeight.w500,
                       color: Style.nearlyDarkBlue,
                     ),
                   ),
                   subtitle: Text(
-                    thisPost.userDetails?.schoolName ??
-                        'St.John\'s International School, Fatehabad, Haryana.',
+                    thisPost.schoolName ?? '',
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: Style.caption.copyWith(
@@ -269,24 +269,51 @@ class IndividualPost extends GetView<MainPageController> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    Card(
-                      elevation: 8,
-                      color: Colors.white70,
-                      margin: EdgeInsets.all(4),
-                      child: FittedBox(
-                        fit: BoxFit.fill,
+              if (thisPost.postUrls != null)
+                ...thisPost.postUrls!
+                    .map(
+                      (e) => Container(
+                        margin: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black54,
+                            width: 0.32,
+                          ),
+                        ),
                         child: CachedNetworkImage(
-                          imageUrl: thisPost.imageUrl ?? '',
+                          imageUrl: e,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    )
+                    .toList(),
+              // Padding(
+              //   padding: EdgeInsets.all(8),
+              //   child: Column(
+              //     children: [
+              //       Card(
+              //         elevation: 8,
+              //         color: Colors.white70,
+              //         margin: EdgeInsets.all(4),
+              //         child: FittedBox(
+              //           fit: BoxFit.fill,
+              //           child: ImageSlideshow(
+              //             initialPage: 0,
+              //             indicatorColor: Colors.blue,
+              //             indicatorBackgroundColor: Colors.grey,
+              //             children: thisPost.postUrls!
+              //                 .map(
+              //                   (e) => CachedNetworkImage(
+              //                     imageUrl: e,
+              //                   ),
+              //                 )
+              //                 .toList(),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

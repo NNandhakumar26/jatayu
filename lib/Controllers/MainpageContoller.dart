@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:jatayu/About_Section/about.dart';
-import 'package:jatayu/About_Section/aboutController.dart';
-import 'package:jatayu/FAQ_Section/faq.dart';
+import 'package:jatayu/about/about.dart';
+import 'package:jatayu/about/aboutController.dart';
+import 'package:jatayu/faq/faq.dart';
 import 'package:jatayu/LeaderBoard/leaderBoard.dart';
 import 'package:jatayu/LeaderBoard/leaderBoardController.dart';
 import 'package:flutter/material.dart';

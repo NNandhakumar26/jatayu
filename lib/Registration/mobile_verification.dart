@@ -139,7 +139,39 @@ class MobilePage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        )
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("By signing up you agree to our "),
+                            GestureDetector(
+                              child: Text(
+                                "Terms of Use",
+                                style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              onTap: () {},
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("and "),
+                            GestureDetector(
+                              child: Text(
+                                "Privacy Policy",
+                                style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

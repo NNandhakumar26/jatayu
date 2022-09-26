@@ -19,7 +19,7 @@ class CoursePage extends GetView<CourseController> {
         //     elevation: 8,
         //     leadingWidth: 0,
         //     shadowColor: Style.nearlyDarkBlue.withOpacity(0.16),
-        //     title: CompanyAppbarRow(),
+        //     title: CompanyAppbar(),
         //   ),
         //   preferredSize: Size(
         //     double.infinity,

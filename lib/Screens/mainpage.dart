@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jatayu/Model/Post.dart';
-import 'package:jatayu/Network/data_fetching.dart';
+import 'package:jatayu/Screens/create_post.dart';
+import 'package:jatayu/modals/Activity.dart';
+import 'package:jatayu/modals/Post.dart';
+import 'package:jatayu/database/network_database.dart';
 import 'package:jatayu/Screens/Activities.dart';
 import 'package:jatayu/Screens/chat_screen.dart';
-import 'package:jatayu/Screens/mainPageContents.dart';
 import 'package:jatayu/Screens/post_container.dart';
 import 'package:jatayu/Theme.dart';
 
+import '../Widgets/appbars.dart';
 import 'MainPageContainer.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,35 +23,44 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _scrollController = ScrollController();
   bool zeroProducts = false;
-  bool isLoading = false;
+  bool isLoadingPosts = false;
   bool hasMore = true;
   int documentLimit = 10;
   DocumentSnapshot? lastDocument;
-  List<Post> posts = [];
+  List<Post> postList = [];
+  Future<List<Activity>> activityList = Future.value([]);
 
   @override
   void initState() {
     // TODO: implement initState
-    getUsers();
+    initList();
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
       if (maxScroll - currentScroll <= 2) {
-        getUsers();
+        getpostList();
       }
     });
     super.initState();
   }
 
-  getUsers() async {
+  Future<void> initList() async {
+    print('Entered');
+    // await Future.delayed(Duration(seconds: 2));
+    await getpostList();
+    activityList = Network.readActivities(GetPost.activity);
+    print('Exit');
+  }
+
+  getpostList() async {
     if (!hasMore) {
       return;
     }
-    if (isLoading) {
+    if (isLoadingPosts) {
       return;
     }
     setState(() {
-      isLoading = true;
+      isLoadingPosts = true;
     });
     QuerySnapshot querySnapshot;
     if (lastDocument == null) {
@@ -69,12 +80,12 @@ class _MainPageState extends State<MainPage> {
     if (querySnapshot.docs.length < documentLimit) {
       hasMore = false;
     }
-    lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    if (querySnapshot.docs.isNotEmpty)
+      lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
     setState(
       () {
-        isLoading = false;
-        // for (var i = 0; i < 4; i++)
-        posts.addAll(
+        isLoadingPosts = false;
+        postList.addAll(
           querySnapshot.docs.map(
             (doc) {
               return Post.fromMap(doc.data()! as Map<String, dynamic>, doc.id);
@@ -88,65 +99,97 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: <Widget>[
-          const ThisPageSliverAppBar(),
-          ThisPageSliverToBoxAdapter(posts),
-          // SliverList(
-          //   delegate: SliverChildListDelegate(
-          //     [
-          //       ...posts
-          //           .map(
-          //             (e) => PostContainer(
-          //               thisPost: e,
-          //             ),
-          //           )
-          //           .toList(),
-          //       // CustomFutureBuilder<List<Post>>(
-          //       //   onSuccessWidget: (data) => Column(
-          //       //     children: posts
-          //       //         .map(
-          //       //           (e) => PostContainer(
-          //       //             thisPost: e,
-          //       //           ),
-          //       //         )
-          //       //         .toList(),
-          //       //   ),
-          //       //   futureFunction: Network.getAllPosts(),
-          //       // ),
-          //     ],
-          //   ),
-          // ),
+      body: RefreshIndicator(
+        onRefresh: () async => await initList(),
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: <Widget>[
+            const ThisPageSliverAppBar(),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  if (index == 0) {
+                    return createPostWidget(context);
+                  }
 
-          // SliverList(
-          //   delegate: SliverChildListDelegate(
-          //     [
-          //       Column(
-          //         children: [
-          //           CustomFutureBuilder<List<Post>>(
-          //             onSuccessWidget: (data) => Expanded(
-          //               child: ListView(
-          //                 controller: _scrollController,
-          //                 shrinkWrap: true,
-          //                 physics: NeverScrollableScrollPhysics(),
-          //                 children: data
-          //                     .map(
-          //                       (e) => PostContainer(
-          //                         thisPost: e,
-          //                       ),
-          //                     )
-          //                     .toList(),
-          //               ),
-          //             ),
-          //             futureFunction: Network.getAllPosts(),
-          //           ),
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // ),
-        ],
+                  return (postList.isNotEmpty)
+                      ? Column(
+                          children: [
+                            PostContainer(
+                              thisPost: postList[index - 1],
+                            ),
+                            if (index == postList.length) 120.height,
+                            if (index == postList.length && isLoadingPosts)
+                              CircularProgressIndicator(),
+                          ],
+                        )
+                      : Container(
+                          color: Colors.red,
+                          height: 800,
+                          width: 80,
+                          child: Text('No postList'),
+                        );
+                },
+                childCount: postList.length + 1,
+              ),
+            ),
+
+            // ThisPageSliverToBoxAdapter(postList),
+            // SliverList(
+            //   delegate: SliverChildListDelegate(
+            //     [
+            //       ...postList
+            //           .map(
+            //             (e) => PostContainer(
+            //               thisPost: e,
+            //             ),
+            //           )
+            //           .toList(),
+            //       // CustomFutureBuilder<List<Post>>(
+            //       //   onSuccessWidget: (data) => Column(
+            //       //     children: postList
+            //       //         .map(
+            //       //           (e) => PostContainer(
+            //       //             thisPost: e,
+            //       //           ),
+            //       //         )
+            //       //         .toList(),
+            //       //   ),
+            //       //   futureFunction: Network.getAllpostList(),
+            //       // ),
+            //     ],
+            //   ),
+            // ),
+
+            // SliverList(
+            //   delegate: SliverChildListDelegate(
+            //     [
+            //       Column(
+            //         children: [
+            //           CustomFutureBuilder<List<Post>>(
+            //             onSuccessWidget: (data) => Expanded(
+            //               child: ListView(
+            //                 controller: _scrollController,
+            //                 shrinkWrap: true,
+            //                 physics: NeverScrollableScrollPhysics(),
+            //                 children: data
+            //                     .map(
+            //                       (e) => PostContainer(
+            //                         thisPost: e,
+            //                       ),
+            //                     )
+            //                     .toList(),
+            //               ),
+            //             ),
+            //             futureFunction: Network.getAllpostList(),
+            //           ),
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
+          ],
+        ),
       ),
 
       // body: FirestoreListView<Post>(
@@ -173,7 +216,7 @@ class _MainPageState extends State<MainPage> {
       //                   ),
       //                 ),
       //               ),
-      //               CustomPostContainer(),
+      //               CreatePostWidget(),
       //               SizedBox(
       //                 height: 8,
       //               ),
@@ -198,7 +241,7 @@ class _MainPageState extends State<MainPage> {
       //               //         )
       //               //         .toList(),
       //               //   ),
-      //               //   futureFunction: Network.getAllPosts(),
+      //               //   futureFunction: Network.getAllpostList(),
       //               // )
       //             ],
       //           ),
@@ -209,46 +252,71 @@ class _MainPageState extends State<MainPage> {
       // ),
     );
   }
+
+  Widget createPostWidget(BuildContext context) {
+    return Column(
+      children: [
+        8.height,
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Activities(
+            futureActivityList: activityList,
+          ),
+        ),
+        8.height,
+        CustomCard(
+          navigateTo: PostCreationPage(),
+          title: 'Create Post',
+          subtitle: 'Click to create a new post',
+        ),
+      ],
+    );
+  }
 }
 
-class ThisPageSliverToBoxAdapter extends StatelessWidget {
-  final List<Post> posts;
-  ThisPageSliverToBoxAdapter(
-    this.posts, {
+class CustomCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final Widget navigateTo;
+  const CustomCard({
     Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.navigateTo,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 20,
-            child: Center(
-              child: const Text(
-                'Notification Content can be scrolled as a Text Here (can be disabled)',
-                style: TextStyle(fontSize: 8),
-              ),
-            ),
+    return Card(
+      margin: EdgeInsets.all(16),
+      elevation: 4,
+      borderOnForeground: true,
+      color: Colors.white.withOpacity(0.90),
+      shadowColor: Style.nearlyDarkBlue.withOpacity(0.32),
+      child: ListTile(
+        onTap: () => Style.navigateBack(
+          context,
+          navigateTo,
+        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        title: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 8.0,
           ),
-          CustomPostContainer(),
-          SizedBox(
-            height: 8,
-          ),
-          Container(
-            height: Get.height / 3.2,
-            margin: EdgeInsets.symmetric(vertical: 8),
-            child: Activities(),
-          ),
-          ...posts
-              .map(
-                (e) => PostContainer(
-                  thisPost: e,
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headline6!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.4,
                 ),
-              )
-              .toList(),
-        ],
+          ),
+        ),
+        subtitle: subtitle.subTitle,
+        trailing: Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 18,
+        ),
       ),
     );
   }
@@ -264,7 +332,7 @@ class ThisPageSliverAppBar extends StatelessWidget {
     return SliverAppBar(
       leading: SizedBox.shrink(),
       leadingWidth: 0,
-      title: CompanyAppbarRow(),
+      title: CompanyAppbar(),
       floating: false,
       pinned: true,
       snap: false,
@@ -329,63 +397,6 @@ class ThisPageSliverAppBar extends StatelessWidget {
           StretchMode.zoomBackground,
         ],
       ),
-    );
-  }
-}
-
-class CompanyAppbarRow extends StatelessWidget {
-  final String? title;
-  const CompanyAppbarRow({
-    Key? key,
-    this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title ?? 'Jatayu Charitable Trust',
-          style: Style.headline.copyWith(
-            color: Style.nearlyDarkBlue.withOpacity(0.87),
-            letterSpacing: -0.4,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
-                color: Colors.black54,
-              ),
-              iconSize: 18,
-              splashColor: Style.nearlyDarkBlue.withOpacity(0.32),
-              splashRadius: 20,
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (builder) => const ChatScreen(),
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.forum_rounded,
-                color: Colors.black54,
-              ),
-              iconSize: 18,
-              splashColor: Style.nearlyDarkBlue.withOpacity(0.32),
-              splashRadius: 20,
-            ),
-          ],
-        )
-      ],
     );
   }
 }

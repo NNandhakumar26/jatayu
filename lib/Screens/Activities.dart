@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:jatayu/Model/Activity.dart';
-import 'package:jatayu/Model/User.dart';
-import 'package:jatayu/Network/data_fetching.dart';
+import 'package:jatayu/Widgets/loading_dialog.dart';
+import 'package:jatayu/modals/Activity.dart';
+import 'package:jatayu/modals/User.dart';
+import 'package:jatayu/database/network_database.dart';
 import 'package:jatayu/Screens/IndividualActivity.dart';
 import 'package:jatayu/Screens/ProfileAvatar.dart';
 import 'package:get/get.dart';
@@ -11,13 +12,15 @@ import 'package:jatayu/Widgets/titleView.dart';
 import '../Theme.dart';
 
 class Activities extends StatelessWidget {
-  final AppUser? currentUser;
-  final List<Activity>? activities;
+  // final AppUser? currentUser;
+  // final List<Activity>? activities;
+  final Future<List<Activity>>? futureActivityList;
 
   const Activities({
     Key? key,
-    this.currentUser,
-    this.activities,
+    // this.currentUser,
+    // this.activities,
+    required this.futureActivityList,
   }) : super(key: key);
 
   @override
@@ -27,65 +30,53 @@ class Activities extends StatelessWidget {
         TitleView(
           title: 'Our Recent Activities',
         ),
+        4.height,
         Padding(
           padding: const EdgeInsets.only(
-            top: 6.0,
+            top: 8.0,
             left: 6,
           ),
-          child: CustomFutureBuilder<List<Activity>>(
-            onSuccessWidget: (value) => Container(
-              height: Get.height / 3.6,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 8.0,
-                ),
-                scrollDirection: Axis.horizontal,
-                itemCount: value.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: StoryCard(
-                      story: Activity(
-                        desc: value[index].desc,
-                        likes: value[index].likes,
-                        title: value[index].title,
-                        image: value[index].image,
+          child: FutureBuilder<List<Activity>>(
+            future: futureActivityList,
+            builder: (context, value) =>
+                (value.connectionState == ConnectionState.done)
+                    ? postContainer(value.data!)
+                    : CustomLoadingDialog(
+                        title: 'Loading',
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            futureFunction: Network.getAllActivities(GetPost.activity),
           ),
         ),
       ],
     );
   }
+
+  Widget postContainer(List<Activity> value) {
+    return Container(
+      height: Get.height / 3.6,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10.0,
+          horizontal: 8.0,
+        ),
+        scrollDirection: Axis.horizontal,
+        itemCount: value.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: StoryCard(
+              story: Activity(
+                desc: value[index].desc,
+                likes: value[index].likes,
+                title: value[index].title,
+                image: value[index].image,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
-// FutureBuilder<List<Activity>>(
-//   future: close(),
-//   builder: (context, AsyncSnapshot<List<Activity>> snapshot) {
-//     if (snapshot.connectionState == ConnectionState.waiting) {
-//       return Center(
-//         child: Row(
-//           children: [
-//             CircularProgressIndicator(),
-//             SizedBox(
-//               width: 8,
-//             ),
-//             Text('Loading Quotes'),
-//           ],
-//         ),
-//       );
-//     }
-//     if (snapshot.connectionState == ConnectionState.done) {
-//       return
-//     }
-//     return Text('Nothing fits in here');
-//   },
-// ),
 
 class StoryCard extends StatelessWidget {
   final bool isAddStory;
@@ -103,9 +94,11 @@ class StoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(IndividualActivity(
-          thisActivity: story ?? Activity(),
-        ));
+        Get.to(
+          IndividualActivity(
+            thisActivity: story ?? Activity(),
+          ),
+        );
       },
       child: Stack(
         children: [

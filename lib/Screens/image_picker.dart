@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jatayu/Model/Post.dart';
+import 'package:jatayu/modals/Post.dart';
 import 'package:jatayu/Widgets/bouncingButton.dart';
 
 import '../Theme.dart';
