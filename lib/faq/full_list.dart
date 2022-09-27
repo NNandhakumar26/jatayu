@@ -31,7 +31,9 @@ class FullListPage extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: ListView.separated(
             separatorBuilder: ((context, index) => Divider(
-                  color: Style.nearlyDarkBlue.withOpacity(0.16),
+                  height: 0.8,
+                  thickness: 0.8,
+                  color: Colors.black12,
                 )),
             itemCount: activityList.length,
             itemBuilder: (context, index) {

@@ -23,7 +23,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final _scrollController = ScrollController();
   bool zeroProducts = false;
-  bool isLoadingPosts = false;
+  bool isLoadingPosts = true;
   bool hasMore = true;
   int documentLimit = 10;
   DocumentSnapshot? lastDocument;
@@ -33,7 +33,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // TODO: implement initState
-    initList();
     _scrollController.addListener(() {
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
@@ -42,58 +41,78 @@ class _MainPageState extends State<MainPage> {
       }
     });
     super.initState();
+    initList();
   }
 
   Future<void> initList() async {
     print('Entered');
     // await Future.delayed(Duration(seconds: 2));
+    postList.clear();
     await getpostList();
     activityList = Network.readActivities(GetPost.activity);
     print('Exit');
   }
 
-  getpostList() async {
-    if (!hasMore) {
-      return;
-    }
-    if (isLoadingPosts) {
-      return;
-    }
+  Future<void> getpostList() async {
+    // if (!hasMore) {
+    //   return;
+    // }
+    // if (isLoadingPosts) {
+    //   return;
+    // }
     setState(() {
       isLoadingPosts = true;
     });
-    QuerySnapshot querySnapshot;
-    if (lastDocument == null) {
-      Query quary = Network.postInstance.limit(documentLimit);
-      querySnapshot = await quary.get();
-      if (querySnapshot.docs.isEmpty) {
-        setState(() {
-          zeroProducts = true;
-        });
-      }
-    } else {
-      Query quary = Network.postInstance
-          .startAfterDocument(lastDocument!)
-          .limit(documentLimit);
-      querySnapshot = await quary.get();
-    }
-    if (querySnapshot.docs.length < documentLimit) {
-      hasMore = false;
-    }
-    if (querySnapshot.docs.isNotEmpty)
-      lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
-    setState(
-      () {
-        isLoadingPosts = false;
-        postList.addAll(
-          querySnapshot.docs.map(
-            (doc) {
-              return Post.fromMap(doc.data()! as Map<String, dynamic>, doc.id);
-            },
-          ),
-        );
-      },
-    );
+    postList = await Network.readAllPosts();
+    return;
+    // TODO: Implement this pagination
+    // QuerySnapshot<Post> querySnapshot;
+    // if (lastDocument == null) {
+    //   Query<Post> quary =
+    //       Network.postInstance.limit(documentLimit).withConverter<Post>(
+    //             fromFirestore: (snapshot, _) => Post.fromMap(
+    //               snapshot.data()!,
+    //               snapshot.id,
+    //             ),
+    //             toFirestore: (Post quotes, _) => quotes.toMap(),
+    //           );
+    //   querySnapshot = await quary.get();
+    //   if (querySnapshot.docs.isEmpty) {
+    //     setState(() {
+    //       zeroProducts = true;
+    //     });
+    //   }
+    // } else {
+    //   Query<Post> quary = Network.postInstance
+    //       .startAfterDocument(lastDocument!)
+    //       .withConverter<Post>(
+    //         fromFirestore: (snapshot, _) => Post.fromMap(
+    //           snapshot.data()!,
+    //           snapshot.id,
+    //         ),
+    //         toFirestore: (Post quotes, _) => quotes.toMap(),
+    //       )
+    //       .limit(documentLimit);
+    //   querySnapshot = await quary.get();
+    // }
+
+    // if (querySnapshot.docs.length < documentLimit) {
+    //   hasMore = false;
+    // }
+
+    // if (querySnapshot.docs.isNotEmpty)
+    //   lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    // setState(
+    //   () {
+    //     isLoadingPosts = false;
+    //     for (var item in querySnapshot.docs) postList.add(item.data());
+
+    //     // postList.addAll(
+    //     //   querySnapshot.docs.toList(),
+    //     // );
+    //   },
+    // );
   }
 
   @override

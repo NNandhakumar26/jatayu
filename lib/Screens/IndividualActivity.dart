@@ -71,23 +71,23 @@ class IndividualActivity extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.72),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.favorite_border_rounded,
-                                  color: Colors.white60,
-                                  size: 18,
-                                ),
-                                SizedBox(
-                                  width: 24,
-                                ),
-                                Icon(
-                                  Icons.share_rounded,
-                                  color: Colors.white60,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Icon(
+                            //       Icons.favorite_border_rounded,
+                            //       color: Colors.white60,
+                            //       size: 18,
+                            //     ),
+                            //     SizedBox(
+                            //       width: 24,
+                            //     ),
+                            //     Icon(
+                            //       Icons.share_rounded,
+                            //       color: Colors.white60,
+                            //       size: 18,
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                       ),

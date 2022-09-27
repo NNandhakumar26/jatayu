@@ -90,20 +90,20 @@ class IndividualPage extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.favorite_border_rounded,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.share,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
+                                  // IconButton(
+                                  //   onPressed: () {},
+                                  //   icon: Icon(
+                                  //     Icons.favorite_border_rounded,
+                                  //     color: Colors.black54,
+                                  //   ),
+                                  // ),
+                                  // IconButton(
+                                  //   onPressed: () {},
+                                  //   icon: Icon(
+                                  //     Icons.share,
+                                  //     color: Colors.black54,
+                                  //   ),
+                                  // ),
                                   // IconButton(
                                   //     icon: BuildLoveIcon(
                                   //         collectionName: 'contents',
@@ -129,7 +129,7 @@ class IndividualPage extends StatelessWidget {
                               Text(
                                 activity.title ?? '',
                                 style: Style.body1.copyWith(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -137,7 +137,7 @@ class IndividualPage extends StatelessWidget {
                                 height: 6,
                               ),
                               Divider(
-                                color: Style.nearlyDarkBlue.withOpacity(0.60),
+                                color: Style.nearlyDarkBlue.withOpacity(0.87),
                                 endIndent: Get.width / 1.24,
                                 thickness: 2,
                               ),

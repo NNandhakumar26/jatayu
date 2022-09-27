@@ -14,6 +14,7 @@ import '../Widgets/appbars.dart';
 class FAQPage extends StatelessWidget {
   final knowYourPlants = <Activity>[];
   final faq = <Activity>[];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

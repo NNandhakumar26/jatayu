@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:jatayu/Screens/post_container.dart';
 import 'package:jatayu/Theme.dart';
 import 'package:jatayu/Widgets/loading_dialog.dart';
@@ -25,10 +26,12 @@ class _MyPostsPageState extends State<MyPostsPage> {
 
   void initPosts() {
     postList = Network.readUserPosts(FirebaseAuth.instance.currentUser!.uid);
+    print(postList.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    print(FirebaseAuth.instance.currentUser!.uid);
     return SafeArea(
       child: Material(
         child: SizedBox(
@@ -48,7 +51,11 @@ class _MyPostsPageState extends State<MyPostsPage> {
                               thisPost: posts.data![index],
                               isOwnPost: true,
                               onDeleteFunction: () {
+                                // TODO: check whether it is working, if not init post again..
                                 posts.data!.removeAt(index);
+                                // initPosts();
+                                print('Post list refreshed');
+                                setState(() {});
                               },
                             )
                       : Center(

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:get/get.dart';
 import 'package:jatayu/modals/Post.dart';
 import '../Theme.dart';
 import '../Widgets/alert_dialog.dart';
@@ -22,7 +21,7 @@ class PostContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: Get.width,
+      width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
       decoration: BoxDecoration(
@@ -35,7 +34,8 @@ class PostContainer extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Get.to(
+          Style.navigateBack(
+            context,
             IndividualPost(
               thisPost: thisPost,
             ),
@@ -120,6 +120,97 @@ class PostContainer extends StatelessWidget {
             ),
             if (thisPost.postUrls != null) imageSlideShowWidget(context),
             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                thisPost.description ?? '',
+                style: Style.title.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Style.darkText.withOpacity(0.60),
+                ),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Hero(
+                    tag: thisPost.postID.toString(),
+                    child: PostUserContainer(thisPost),
+                  ),
+                  //TODO: USE CUSTOM FUTURE BUILDER HERE
+
+                  8.height,
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.end,
+                  //   children: [
+                  //     Container(
+                  //       // height: 150,
+                  //       width: Get.width / 2,
+                  //       child: TextFormField(
+                  //         // controller: controller.lastNameTextEditController.value,
+                  //         validator: (value) {
+                  //           if (value!.isEmpty) {
+                  //             return 'Enter a Valid Last Name';
+                  //           }
+                  //           return null;
+                  //         },
+                  //         autofocus: false,
+                  //         textInputAction: TextInputAction.next, maxLines: 3,
+                  //         style: Style.subtitle.copyWith(
+                  //           color: Style.darkerText.withOpacity(0.87),
+                  //           letterSpacing: 0.2,
+                  //         ),
+                  //         cursorColor: Style.nearlyDarkBlue.withOpacity(0.87),
+                  //         decoration: Style.decoration,
+                  //       ),
+                  //     ),
+                  //     Column(
+                  //       children: [
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             IconButton(
+                  //               onPressed: () {},
+                  //               icon: Icon(
+                  //                 Icons.favorite_outline,
+                  //                 color: Colors.red.withOpacity(0.87),
+                  //               ),
+                  //             ),
+                  //             IconButton(
+                  //               onPressed: () {},
+                  //               icon: Icon(
+                  //                 Icons.send_sharp,
+                  //                 color: Colors.green.withOpacity(0.87),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         ElevatedButton(
+                  //           onPressed: () {},
+                  //           style: ButtonStyle(
+                  //             backgroundColor: MaterialStateProperty.all(
+                  //               Style.nearlyDarkBlue.withOpacity(0.60),
+                  //             ),
+                  //           ),
+                  //           child: Text('Comment'),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              ),
+            ),
+
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
@@ -201,157 +292,10 @@ class PostContainer extends StatelessWidget {
                 ],
               ),
             ),
+            const Divider(),
 
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      thisPost.description ?? '',
-                      style: Style.title.copyWith(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: Style.darkText.withOpacity(0.60),
-                      ),
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Hero(
-                    tag: thisPost.postID.toString(),
-                    child: PostUserContainer(thisPost),
-                  ),
-                  //TODO: USE CUSTOM FUTURE BUILDER HERE
-                  // if (thisPost.userID != null)
-                  //   CustomFutureBuilder<AppUser>(
-                  //     onSuccessWidget: (user) {
-                  //       thisPost.userDetails = user;
-                  //       return Hero(
-                  //         tag: thisPost.postID.toString(),
-                  //         child: PostUserContainer(
-                  //           thisUser: user,
-                  //         ),
-                  //       );
-                  //     },
-                  //     futureFunction:
-                  //         Network.getUserWithID(thisPost.userID!),
-                  //   ),
-
-                  8.height,
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                  //   children: [
-                  //     Container(
-                  //       // height: 150,
-                  //       width: Get.width / 2,
-                  //       child: TextFormField(
-                  //         // controller: controller.lastNameTextEditController.value,
-                  //         validator: (value) {
-                  //           if (value!.isEmpty) {
-                  //             return 'Enter a Valid Last Name';
-                  //           }
-                  //           return null;
-                  //         },
-                  //         autofocus: false,
-                  //         textInputAction: TextInputAction.next, maxLines: 3,
-                  //         style: Style.subtitle.copyWith(
-                  //           color: Style.darkerText.withOpacity(0.87),
-                  //           letterSpacing: 0.2,
-                  //         ),
-                  //         cursorColor: Style.nearlyDarkBlue.withOpacity(0.87),
-                  //         decoration: Style.decoration,
-                  //       ),
-                  //     ),
-                  //     Column(
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             IconButton(
-                  //               onPressed: () {},
-                  //               icon: Icon(
-                  //                 Icons.favorite_outline,
-                  //                 color: Colors.red.withOpacity(0.87),
-                  //               ),
-                  //             ),
-                  //             IconButton(
-                  //               onPressed: () {},
-                  //               icon: Icon(
-                  //                 Icons.send_sharp,
-                  //                 color: Colors.green.withOpacity(0.87),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         ElevatedButton(
-                  //           onPressed: () {},
-                  //           style: ButtonStyle(
-                  //             backgroundColor: MaterialStateProperty.all(
-                  //               Style.nearlyDarkBlue.withOpacity(0.60),
-                  //             ),
-                  //           ),
-                  //           child: Text('Comment'),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        PostButton(
-                          icon: Icon(
-                            // MdiIcons
-                            // .thumbUpOutline,
-                            Icons.thumb_up_alt_rounded,
-                            color: Colors.grey[600],
-                            size: 20.0,
-                          ),
-                          label: 'Like',
-                          onTap: () => print('Like'),
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: PostButton(
-                            icon: Icon(
-                              // MdiIcons.commentOutline,
-                              Icons.insert_comment_rounded,
-                              color: Colors.grey[600],
-                              size: 20.0,
-                            ),
-                            label: 'Comment',
-                            onTap: () => print('Comment'),
-                          ),
-                        ),
-                        PostButton(
-                          icon: Icon(
-                            // MdiIcons.shareOutline,
-                            Icons.share_rounded,
-                            color: Colors.grey[600],
-                            size: 20.0,
-                          ),
-                          label: 'Share',
-                          onTap: () => print('Share'),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            postButtons(),
+            8.height,
             // Container(
             //   margin: EdgeInsets.symmetric(horizontal: 4),
             //   width: Get.width,
@@ -466,6 +410,36 @@ class PostContainer extends StatelessWidget {
     );
   }
 
+  Padding postButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          PostButton(
+            iconData: Icons.favorite_border,
+            label: 'Like',
+            onTap: () => print('Like'),
+          ),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: PostButton(
+              iconData: Icons.insert_comment_rounded,
+              label: 'Comment',
+              onTap: () => print('Comment'),
+            ),
+          ),
+          PostButton(
+            iconData: Icons.share_rounded,
+            label: 'Share',
+            onTap: () => print('Share'),
+          )
+        ],
+      ),
+    );
+  }
+
   Container imageSlideShowWidget(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -497,13 +471,13 @@ class PostContainer extends StatelessWidget {
 }
 
 class PostButton extends StatelessWidget {
-  final Icon icon;
+  final IconData iconData;
   final String label;
   final Function onTap;
 
   const PostButton({
     Key? key,
-    required this.icon,
+    required this.iconData,
     required this.label,
     required this.onTap,
   }) : super(key: key);
@@ -518,13 +492,18 @@ class PostButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon,
+            Icon(
+              // MdiIcons.shareOutline,
+              iconData,
+              color: Style.lightText.withOpacity(0.87),
+              size: 18.0,
+            ),
             const SizedBox(width: 4.0),
             Text(
               label,
               style: Style.subtitle.copyWith(
                 fontFamily: Style.fontName,
-                color: Style.lightText.withOpacity(0.72),
+                color: Style.lightText.withOpacity(0.60),
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.4,
                 fontSize: 14,
@@ -557,7 +536,7 @@ class PostUserContainer extends StatelessWidget {
         ),
         color: Style.nearlyDarkBlue.withOpacity(0.032),
       ),
-      height: Get.height / 5.8,
+      height: MediaQuery.of(context).size.height / 5.8,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,

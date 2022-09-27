@@ -225,36 +225,20 @@ class IndividualPost extends GetView<MainPageController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           PostButton(
-                            icon: Icon(
-                              // MdiIcons
-                              // .thumbUpOutline,
-                              Icons.thumb_up_alt_rounded,
-                              color: Colors.grey[600],
-                              size: 20.0,
-                            ),
+                            iconData: Icons.favorite_border,
                             label: 'Like',
                             onTap: () => print('Like'),
                           ),
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: PostButton(
-                              icon: Icon(
-                                // MdiIcons.commentOutline,
-                                Icons.insert_comment_rounded,
-                                color: Colors.grey[600],
-                                size: 20.0,
-                              ),
+                              iconData: Icons.insert_comment_rounded,
                               label: 'Comment',
                               onTap: () => print('Comment'),
                             ),
                           ),
                           PostButton(
-                            icon: Icon(
-                              // MdiIcons.shareOutline,
-                              Icons.share_rounded,
-                              color: Colors.grey[600],
-                              size: 20.0,
-                            ),
+                            iconData: Icons.share_rounded,
                             label: 'Share',
                             onTap: () => print('Share'),
                           )

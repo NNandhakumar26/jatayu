@@ -12,14 +12,10 @@ import 'package:jatayu/Widgets/titleView.dart';
 import '../Theme.dart';
 
 class Activities extends StatelessWidget {
-  // final AppUser? currentUser;
-  // final List<Activity>? activities;
   final Future<List<Activity>>? futureActivityList;
 
   const Activities({
     Key? key,
-    // this.currentUser,
-    // this.activities,
     required this.futureActivityList,
   }) : super(key: key);
 

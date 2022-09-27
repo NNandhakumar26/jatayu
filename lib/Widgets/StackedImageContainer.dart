@@ -15,62 +15,53 @@ class StackedImageContainer extends StatelessWidget {
     required this.activity,
   });
 
-  _onPressed(BuildContext context) {
-    Future.delayed(
-      Duration(milliseconds: 248),
-      () {
-        Style.navigateBack(
-          context,
-          IndividualPage(activity),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Bounce(
-      duration: Duration(milliseconds: 128),
-      onPressed: () => _onPressed(context),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        height: 72,
-        decoration: BoxDecoration(
-          color: Style.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(4),
-          ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Style.grey.withOpacity(0.32),
-              offset: Offset(0.8, 1.6),
-              blurRadius: 10.0,
-            ),
-          ],
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      height: 72,
+      decoration: BoxDecoration(
+        color: Style.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(4),
         ),
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: <Widget>[
-            Positioned(
-              left: 0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                child: SizedBox(
-                  height: Get.height / 10,
-                  width: Get.width / 2.6,
-                  child: Image.asset("assets/images/back.png"),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Style.grey.withOpacity(0.32),
+            offset: Offset(0.8, 1.6),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Stack(
+        alignment: Alignment.topLeft,
+        children: <Widget>[
+          Positioned(
+            left: 0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              child: SizedBox(
+                height: Get.height / 10,
+                width: Get.width / 2.6,
+                child: Image.asset("assets/images/back.png"),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: Container(
+              width: 220,
+              child: CustomListTile(
+                title: title,
+                subtitle: subtitle,
+                onTap: () => Style.navigateBack(
+                  context,
+                  IndividualPage(activity),
                 ),
               ),
             ),
-            Positioned(
-              right: 0,
-              child: Container(
-                width: 220,
-                child: CustomListTile(title: title, subtitle: subtitle),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

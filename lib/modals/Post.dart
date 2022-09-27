@@ -96,7 +96,8 @@ class Post {
       dateTime: map['dateTime'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['dateTime'])
           : null,
-      postUrls: List<String>.from(map['postUrls']),
+      postUrls:
+          (map['postUrls'] != null) ? List<String>.from(map['postUrls']) : null,
       likes: map['likes']?.toInt(),
       comments: map['comments']?.toInt(),
       shares: map['shares']?.toInt(),

@@ -114,7 +114,6 @@ class Network {
             (value) => value.docs.map(
               (value) {
                 Post post = Post.fromMap(value.data(), value.id);
-                post.postID = value.id;
                 return post;
               },
             ).toList(),

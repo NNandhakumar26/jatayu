@@ -68,10 +68,14 @@ class HomePage extends StatelessWidget {
                 items: [
                   TitledNavigationBarItem(
                     title: Text('Home'),
-                    icon: Icon(Icons.home),
+                    icon: Icon(
+                      Icons.home,
+                    ),
+                    // icon: Icons.home,
                   ),
                   TitledNavigationBarItem(
                     title: Text('Forum'),
+                    // icon: Icons.question_answer_rounded,
                     icon: Padding(
                       padding: const EdgeInsets.only(
                         right: 24,
@@ -81,16 +85,22 @@ class HomePage extends StatelessWidget {
                   ),
                   TitledNavigationBarItem(
                     title: Text('LeaderBoard'),
+                    // icon: Icons.badge_rounded,
                     icon: Padding(
                       padding: const EdgeInsets.only(
                         left: 24,
                       ),
-                      child: Icon(Icons.badge_rounded),
+                      child: Icon(
+                        Icons.badge_rounded,
+                      ),
                     ),
                   ),
                   TitledNavigationBarItem(
                     title: Text('About'),
-                    icon: Icon(Icons.face),
+                    icon: Icon(
+                      Icons.face,
+                    ),
+                    // icon: Icons.face,
                   ),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -239,6 +240,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget displayImageWidget(BuildContext context, AppUser appUser) {
+    print('Entered into the new image widget');
     return Center(
       child: Stack(
         children: [
@@ -255,19 +257,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     Network.uploadFile(
                       isPost: false,
                       file: imageFile[0],
-                      updateFileUrl: AuthController().user?.photoURL,
+                      updateFileUrl:
+                          FirebaseAuth.instance.currentUser?.photoURL ?? '',
                     ).then(
-                      (imageUrl) {
+                      (imageUrl) async {
                         appUser.imageUrl = imageUrl;
                         print('Done');
 
-                        FirebaseAuth.instance.currentUser!
+                        await FirebaseAuth.instance.currentUser!
                             .updatePhotoURL(imageUrl)
                             .then(
                               (value) =>
                                   Navigator.pop(scaffoldKey.currentContext!),
                             );
+                        await Network.updateUser(appUser);
                         print('Done 2');
+                        setState(() {});
                         return;
                       },
                     );
@@ -281,18 +286,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   ? const FlutterLogo(
                       size: 60,
                     )
-                  : Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                            AuthController().user!.photoURL!,
-                          ),
-                        ),
+                  : CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.white,
+                      foregroundImage: CachedNetworkImageProvider(
+                        appUser.imageUrl!,
                       ),
+                      // height: 150,
+                      // width: 150,
+                      // decoration: BoxDecoration(
+                      //   shape: BoxShape.circle,
+                      // ),
+                      // child: CachedNetworkImage(
+                      //   imageUrl:
+                      //       FirebaseAuth.instance.currentUser!.photoURL!,
+                      // ),
                     ),
             ),
           ),
